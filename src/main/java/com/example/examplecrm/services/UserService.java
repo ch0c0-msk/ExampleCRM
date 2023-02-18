@@ -17,9 +17,9 @@ public class UserService  {
         String login = user.getLogin();
         if (userRepo.findByLogin(login) != null) return false;
         user.setActive(true);
-        user.getRoles().add(Role.ROLE_USER);
+        user.getRoles().add(Role.USER);
         userRepo.save(user);
-        log.info("Saving new user with login {}",login);
+        log.info("Saving new user with attributes: ",user.toString());
         return true;
     }
 }

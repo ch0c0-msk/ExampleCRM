@@ -51,24 +51,23 @@
   </nav>
 </header>
 <div>
-  <table>
-    <tr>
-      <th>ФИО</th>
-      <th>E-mail</th>
-    </tr>
-    <tr th:each = "el: ${clients}">
-      <td th:text="${el.fullName}"></td>
-      <td th:text="${el.email}"></td>
-      <td>
-        <a th:href="'/edit_client/' + ${el.id} " class="btn btn-warning">Редактировать</a>
-      </td>
-      <td>
-        <form th:action="'/remove_client/' + ${el.id}" method="post">
-          <button class="btn btn-danger" type="submit">Удалить</button>
-        </form>
-      </td>
-    </tr>
-  </table>
+  <div th:each="el : ${clients}">
+    <form method="post">
+      <div class="mb-3 mt-3">
+        <label for="exampleFormControlInput1" class="form-label">Название статьи</label>
+        <input type="text" th:value="${el.fullName}" class="form-control border border-dark" id="exampleFormControlInput1"
+               placeholder="ФИО" name="fullName">
+      </div>
+      <div class="mb-3 mt-3">
+        <label for="exampleFormControlInput1" class="form-label">E-mail</label>
+        <input type="text" th:value="${el.email}" class="form-control border border-dark" id="exampleFormControlInput2"
+               placeholder="E-mail" name="email">
+      </div>
+      <div class="mb-3 text-center">
+        <button type="submit" class="btn btn-success">Редактировать</button>
+      </div>
+    </form>
+  </div>
 </div>
 </body>
 </html>
