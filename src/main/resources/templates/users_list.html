@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Список клиентов</title>
-  <link rel="stylesheet" href="css/clients_list.css"/>
+  <link rel="stylesheet" href="css/users_list.css"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 </head>
@@ -52,24 +52,32 @@
   </nav>
 </header>
 <div class="container">
-  <table class="table table-striped table-bordered">
+  <table class="table table-bordered table-striped">
     <tr>
-      <th>№</th>
-      <th>ФИО</th>
-      <th>E-mail</th>
+      <th>ID</th>
+      <th>Login</th>
+      <th>Активность</th>
+      <th>Роли</th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
-    <tr th:each = "el, iterStat: ${clients}">
-      <td th:text="${iterStat.index + 1}"></td>
-      <td th:text="${el.fullName}"></td>
-      <td th:text="${el.email}"></td>
+    <tr th:each = "el: ${users}">
+      <td th:text="${el.id}"></td>
+      <td th:text="${el.login}"></td>
+      <td th:text="${el.active}"></td>
+      <td th:text="${el.roles}"></td>
       <td>
-        <a th:href="'/edit_client/' + ${el.id} " class="btn btn-warning">Редактировать</a>
+        <a th:href="'/edit_user/' + ${el.id} " class="btn btn-warning">Редактировать</a>
       </td>
       <td>
-        <form th:action="'/remove_client/' + ${el.id}" method="post">
-          <button class="btn btn-danger" type="submit">Удалить</button>
+        <form th:action="'/disable_user/' + ${el.id}" method="post">
+          <button class="btn btn-danger" type="submit">Отключить</button>
+        </form>
+      </td>
+      <td>
+        <form th:action="'/enable_user/' + ${el.id}" method="post">
+          <button class="btn btn-success" type="submit">Включить</button>
         </form>
       </td>
     </tr>

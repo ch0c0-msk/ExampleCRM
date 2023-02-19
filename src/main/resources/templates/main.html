@@ -18,7 +18,7 @@
         <div class=" collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link mx-2" href="#">Профиль</a>
+              <a class="nav-link mx-2" href="/main">Профиль</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,13 +30,13 @@
                 <li><a class="dropdown-item" href="#">*</a></li>
               </ul>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
               <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Панель администратора
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="#">Список пользователей</a></li>
-                <li><a class="dropdown-item" href="#">*</a></li>
+                <li><a class="dropdown-item" href="/users_list">Список пользователей</a></li>
+                <li><a class="dropdown-item" href="/add_user">Добавить пользователя</a></li>
                 <li><a class="dropdown-item" href="#">*</a></li>
               </ul>
             </li>
@@ -50,5 +50,18 @@
       </div>
     </nav>
   </header>
+  <div sec:authorize="isAuthenticated()" class="container">
+    <div class="p-3 text-center skill-block">
+      <h4>Текущий пользователь: </h4>
+      <h6 sec:authentication="name"></h6>
+    </div>
+    <div class="p-3 text-center skill-block">
+      <h4>Роли текущего пользователя: </h4>
+      <h6 sec:authentication="principal.authorities"></h6>
+    </div>
+  </div>
+  <div class="container">
+
+  </div>
 </body>
 </html>

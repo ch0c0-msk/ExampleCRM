@@ -18,7 +18,7 @@
       <div class=" collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link mx-2" href="#">Профиль</a>
+            <a class="nav-link mx-2" href="/main">Профиль</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,13 +30,13 @@
               <li><a class="dropdown-item" href="#">*</a></li>
             </ul>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
             <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Панель администратора
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="#">Список пользователей</a></li>
-              <li><a class="dropdown-item" href="#">*</a></li>
+              <li><a class="dropdown-item" href="/users_list">Список пользователей</a></li>
+              <li><a class="dropdown-item" href="/add_user">Добавить пользователя</a></li>
               <li><a class="dropdown-item" href="#">*</a></li>
             </ul>
           </li>
@@ -50,11 +50,17 @@
     </div>
   </nav>
 </header>
-<div>
-  <form method="post" >
-    <input type="text" id="fullName" name="fullName" placeholder="ФИО">
-    <input type="text" id="email" name="email" placeholder="E-mail">
-    <input type="submit" value="Добавить клиента в базу">
+<div class="container">
+  <form method="post">
+    <div class="mb-5 mt-5">
+      <input class="form-control border border-dark" type="text" id="fullName" name="fullName" placeholder="ФИО">
+    </div>
+    <div class="mb-5 mt-5">
+      <input class="form-control border border-dark" type="text" id="email" name="email" placeholder="E-mail">
+    </div>
+    <div class="mb-5 mt-5">
+      <input class="btn btn-success" type="submit" value="Добавить клиента в базу">
+    </div>
   </form>
 </div>
 </body>

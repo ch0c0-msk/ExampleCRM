@@ -7,8 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,6 +41,34 @@ public class ClientController {
         client.setFullName(fullName);
         client.setEmail(email);
         clientService.createClient(client);
+        return "redirect:/clients_list";
+    }
+
+    @GetMapping("/edit_client/{id}")
+    public String editClient(@PathVariable(value = "id") Long id, Model model) {
+
+        Optional<Client> client = clientRepo.findById(id);
+        ArrayList<Client> clientDetails = new ArrayList<>();
+        client.ifPresent(clientDetails::add);
+        model.addAttribute("clients",clientDetails);
+        return "edit_client";
+    }
+
+    @PostMapping("/edit_client/{id}")
+    public String modifyClient(@PathVariable(value = "id") Long id, @RequestParam String fullName, @RequestParam String email) {
+
+        Client client = new Client();
+        client.setId(id);
+        client.setFullName(fullName);
+        client.setEmail(email);
+        clientService.modifyClient(client);
+        return "redirect:/clients_list";
+    }
+
+    @PostMapping("remove_client/{id}")
+    public String removeClient(@PathVariable(value = "id") Long id) {
+
+        clientService.deleteClient(id);
         return "redirect:/clients_list";
     }
 }
