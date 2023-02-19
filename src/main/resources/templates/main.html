@@ -50,9 +50,15 @@
       </div>
     </nav>
   </header>
-  <div sec:authorize="isAuthenticated()">
-    <span>Logged user: </span><span sec:authentication="name"></span>
-    <span>Authenticated user roles: </span><span sec:authentication="principal.authorities"></span>
+  <div sec:authorize="isAuthenticated()" class="container">
+    <div class="p-3 text-center skill-block">
+      <h4>Текущий пользователь: </h4>
+      <h6 sec:authentication="name"></h6>
+    </div>
+    <div class="p-3 text-center skill-block">
+      <h4>Роли текущего пользователя: </h4>
+      <h6 sec:authentication="principal.authorities"></h6>
+    </div>
   </div>
   <div class="container">
 
