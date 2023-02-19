@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Список клиентов</title>
+  <link rel="stylesheet" href="css/users_list.css"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 </head>
@@ -18,7 +19,7 @@
       <div class=" collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link mx-2" href="#">Профиль</a>
+            <a class="nav-link mx-2" href="/main">Профиль</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,8 +36,8 @@
               Панель администратора
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="#">Список пользователей</a></li>
-              <li><a class="dropdown-item" href="#">*</a></li>
+              <li><a class="dropdown-item" href="/users_list">Список пользователей</a></li>
+              <li><a class="dropdown-item" href="/add_user">Добавить пользователя</a></li>
               <li><a class="dropdown-item" href="#">*</a></li>
             </ul>
           </li>
@@ -51,14 +52,34 @@
   </nav>
 </header>
 <div>
-  <table>
+  <table class="table table-bordered table-striped">
     <tr>
       <th>ID</th>
       <th>Login</th>
+      <th>Активность</th>
+      <th>Роли</th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
     <tr th:each = "el: ${users}">
       <td th:text="${el.id}"></td>
       <td th:text="${el.login}"></td>
+      <td th:text="${el.active}"></td>
+      <td th:text="${el.roles}"></td>
+      <td>
+        <a th:href="'/edit_user/' + ${el.id} " class="btn btn-warning">Редактировать</a>
+      </td>
+      <td>
+        <form th:action="'/disable_user/' + ${el.id}" method="post">
+          <button class="btn btn-danger" type="submit">Отключить</button>
+        </form>
+      </td>
+      <td>
+        <form th:action="'/enable_user/' + ${el.id}" method="post">
+          <button class="btn btn-success" type="submit">Включить</button>
+        </form>
+      </td>
     </tr>
   </table>
 </div>
