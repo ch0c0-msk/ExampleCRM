@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService  {
+public class UserService extends CustomUserDetailsService {
     private final UserRepo userRepo;
 
     public boolean createUser(User user) {
