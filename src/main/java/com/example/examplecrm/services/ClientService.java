@@ -9,15 +9,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ClientService {
 
     private final ClientRepo clientRepo;
+    private final UserRepo userRepo;
 
-    public boolean createClient(Client client) {
-
+    public boolean createClient(Principal principal, Client client) {
+        client.setUser(getUserByPrincipal(principal));
         clientRepo.save(client);
         log.info("Saving new client with attributes: {}",client.toString());
         return true;
@@ -45,5 +48,10 @@ public class ClientService {
             log.info("Client with attributes: {} was deleted", client.toString());
             return true;
         }
+    }
+
+    public User getUserByPrincipal(Principal principal) {
+        if (principal == null) { return new User(); }
+        return userRepo.findByLogin(principal.getName());
     }
 }

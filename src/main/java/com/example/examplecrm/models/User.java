@@ -5,9 +5,8 @@ import javax.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +26,15 @@ public class User implements UserDetails {
 
     @Column(name = "active")
     private boolean active;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "email")
+    private String email;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role",

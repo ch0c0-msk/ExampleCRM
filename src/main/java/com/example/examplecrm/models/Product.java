@@ -7,25 +7,19 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "clients")
-public class Client {
+@Table(name = "products")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "full_name")
-    private String fullName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "phone")
-    private String phone;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "discount", columnDefinition = "real default 1.0")
-    private Double discount;
+    @Column(name = "price")
+    private Double price;
 
     @Column(name = "create_dttm")
     private LocalDateTime createDate;
@@ -34,12 +28,8 @@ public class Client {
     @JoinColumn(name="created_by", referencedColumnName="id")
     private User user;
 
-    @Column(name = "reject_flag", columnDefinition = "boolean default false")
-    private Boolean rejectFlag = false;
-
     @PrePersist
     private void onCreate() {
         createDate = LocalDateTime.now();
     }
-
 }

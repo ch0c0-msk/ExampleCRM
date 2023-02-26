@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -35,12 +36,12 @@ public class ClientController {
     }
 
     @PostMapping("add_client")
-    public String createClient(@RequestParam String fullName, @RequestParam String email) {
+    public String createClient(Principal principal, @RequestParam String fullName, @RequestParam String email) {
 
         Client client = new Client();
         client.setFullName(fullName);
         client.setEmail(email);
-        clientService.createClient(client);
+        clientService.createClient(principal, client);
         return "redirect:/clients_list";
     }
 
