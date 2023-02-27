@@ -50,10 +50,10 @@ public class DealController {
         deal.setClient(clientRepo.findById(client_id).orElse(null));
         deal.setProduct(productRepo.findById(product_id).orElse(null));
         dealService.createDeal(principal, deal);
-        return "redirect:/my_deals_list";
+        return "redirect:/my_deals";
     }
 
-    @GetMapping("/my_deals_list")
+    @GetMapping("/my_deals")
     public String myDealList(Principal principal, Model model) {
 
         User user = userRepo.findByLogin(principal.getName());
@@ -79,7 +79,7 @@ public class DealController {
         deal.setStatus(status);
         deal.setUpdateDate(LocalDateTime.now());
         dealService.modifyDeal(principal, deal);
-        return "redirect:/my_deals_list";
+        return "redirect:/my_deals";
     }
 
     @PostMapping("/remove_deal/{id}")
