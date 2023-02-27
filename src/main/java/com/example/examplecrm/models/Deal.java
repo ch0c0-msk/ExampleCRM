@@ -38,6 +38,8 @@ public class Deal {
 
     @PrePersist
     private void onCreate() {
+
         createDate = LocalDateTime.now();
+        status = "NEW";
     }
 }

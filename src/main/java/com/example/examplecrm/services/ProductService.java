@@ -21,18 +21,18 @@ public class ProductService {
     public boolean createProduct(Principal principal, Product product) {
         product.setUser(getUserByPrincipal(principal));
         productRepo.save(product);
-        log.info("Saving new client with attributes: {}",product.toString());
+        log.info("Saving new product with attributes: {}",product.toString());
         return true;
     }
 
     public boolean modifyProduct(Product product) {
 
         if (productRepo.findById(product.getId()) == null) {
-            log.info("Client with id: {} doesnt exist", product.getId());
+            log.info("Product with id: {} doesnt exist", product.getId());
             return false;
         } else {
             productRepo.save(product);
-            log.info("Modify client with new attributes: {}",product.toString());
+            log.info("Modify product with new attributes: {}",product.toString());
             return true;
         }
     }
@@ -40,11 +40,11 @@ public class ProductService {
     public boolean deleteProduct(Long id) {
         Product product = productRepo.findById(id).orElse(null);
         if (product == null) {
-            log.info("Client with id: {} doesnt exist", id);
+            log.info("Product with id: {} doesnt exist", id);
             return false;
         } else {
             productRepo.delete(product);
-            log.info("Client with attributes: {} was deleted", product.toString());
+            log.info("Product with attributes: {} was deleted", product.toString());
             return true;
         }
     }

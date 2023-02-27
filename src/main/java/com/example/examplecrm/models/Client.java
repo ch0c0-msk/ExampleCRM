@@ -24,7 +24,7 @@ public class Client {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "discount", columnDefinition = "real default 1.0")
+    @Column(name = "discount")
     private Double discount;
 
     @Column(name = "create_dttm")
@@ -34,12 +34,15 @@ public class Client {
     @JoinColumn(name="created_by", referencedColumnName="id")
     private User user;
 
-    @Column(name = "reject_flag", columnDefinition = "boolean default false")
-    private Boolean rejectFlag = false;
+    @Column(name = "reject_flag")
+    private Boolean rejectFlag;
 
     @PrePersist
     private void onCreate() {
+
         createDate = LocalDateTime.now();
+        discount = 1.0;
+        rejectFlag = false;
     }
 
 }
