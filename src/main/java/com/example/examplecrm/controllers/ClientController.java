@@ -1,5 +1,6 @@
 package com.example.examplecrm.controllers;
 
+import com.example.examplecrm.exporters.ClientExcelExporter;
 import com.example.examplecrm.models.Client;
 import com.example.examplecrm.repos.ClientRepo;
 import com.example.examplecrm.services.ClientService;
@@ -11,8 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -70,6 +77,23 @@ public class ClientController {
     public String removeClient(@PathVariable(value = "id") Long id) {
 
         clientService.deleteClient(id);
+        return "redirect:/clients_list";
+    }
+
+    @GetMapping("/clients_list/export/excel")
+    public String exportClientsList(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=clients_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Client> listClients = clientService.getListForExport();
+
+        ClientExcelExporter excelExporter = new ClientExcelExporter(listClients);
+        excelExporter.export(response);
         return "redirect:/clients_list";
     }
 }

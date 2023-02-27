@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,10 @@ public class ClientService {
             log.info("Client with attributes: {} was deleted", client.toString());
             return true;
         }
+    }
+
+    public List<Client> getListForExport() {
+        return clientRepo.findByRejectNone();
     }
 
     public User getUserByPrincipal(Principal principal) {
