@@ -27,27 +27,40 @@ public class ClientService {
         return true;
     }
 
-    public boolean modifyClient(Client client) {
+    public boolean modifyClient(Client client, Principal principal) {
 
-        if (clientRepo.findById(client.getId()) == null) {
-            log.info("Client with id: {} doesnt exist", client.getId());
-            return false;
+        if (client.getUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+
+            if (clientRepo.findById(client.getId()) == null) {
+                log.info("Client with id: {} doesnt exist", client.getId());
+                return false;
+            } else {
+                clientRepo.save(client);
+                log.info("Modify client with new attributes: {}", client.toString());
+                return true;
+            }
         } else {
-            clientRepo.save(client);
-            log.info("Modify client with new attributes: {}",client.toString());
-            return true;
+            log.info("It`s not your client or you haven`t a Manager role");
+            return false;
         }
     }
 
-    public boolean deleteClient(Long id) {
+    public boolean deleteClient(Long id, Principal principal) {
         Client client = clientRepo.findById(id).orElse(null);
         if (client == null) {
             log.info("Client with id: {} doesnt exist", id);
             return false;
         } else {
-            clientRepo.delete(client);
-            log.info("Client with attributes: {} was deleted", client.toString());
-            return true;
+            if (client.getUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+
+                clientRepo.delete(client);
+                log.info("Client with attributes: {} was deleted", client.toString());
+                return true;
+            } else {
+
+                log.info("It`s not your client or you haven`t a Manager role");
+                return false;
+            }
         }
     }
 

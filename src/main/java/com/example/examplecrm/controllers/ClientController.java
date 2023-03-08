@@ -5,6 +5,7 @@ import com.example.examplecrm.models.Client;
 import com.example.examplecrm.repos.ClientRepo;
 import com.example.examplecrm.services.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,16 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping("/clients_list")
-    public String clientList(Model model) {
+    public String clientList(Model model, Principal principal) {
+
+        Iterable<Client> clients = clientRepo.findByUser(clientService.getUserByPrincipal(principal));
+        model.addAttribute("clients",clients);
+        return "clients_list";
+    }
+
+//    @PreAuthorize("hasAuthority('MANAGER')")
+    @GetMapping("/clients_all_list")
+    public String clientAllList(Model model) {
         Iterable<Client> clients = clientRepo.findAll();
         model.addAttribute("clients",clients);
         return "clients_list";
@@ -63,20 +73,19 @@ public class ClientController {
     }
 
     @PostMapping("/edit_client/{id}")
-    public String modifyClient(@PathVariable(value = "id") Long id, @RequestParam String fullName, @RequestParam String email) {
+    public String modifyClient(Principal principal, @PathVariable(value = "id") Long id, @RequestParam String fullName, @RequestParam String email) {
 
-        Client client = new Client();
-        client.setId(id);
+        Client client = clientRepo.findById(id).orElse(new Client());
         client.setFullName(fullName);
         client.setEmail(email);
-        clientService.modifyClient(client);
+        clientService.modifyClient(client, principal);
         return "redirect:/clients_list";
     }
 
     @PostMapping("remove_client/{id}")
-    public String removeClient(@PathVariable(value = "id") Long id) {
+    public String removeClient(Principal principal, @PathVariable(value = "id") Long id) {
 
-        clientService.deleteClient(id);
+        clientService.deleteClient(id, principal);
         return "redirect:/clients_list";
     }
 
