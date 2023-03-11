@@ -83,6 +83,14 @@
         <input type="text" th:value="${el.email}" class="form-control border border-dark" id="exampleFormControlInput2"
                placeholder="E-mail" name="email">
       </div>
+      <div class="mb-5 mt-5">
+        <label for="exampleFormControlInput1" class="form-label">Телефон</label>
+        <input class="form-control border border-dark" type="text" th:value="${el.phone}" id="phone" name="phone" placeholder="Телефон">
+      </div>
+      <div class="mb-5 mt-5">
+        <label for="exampleFormControlInput1" class="form-label">Персональная скидка</label>
+        <input class="form-control border border-dark" type="text" th:value="${el.discount}" id="discount" name="discount" placeholder="Персональная скидка">
+      </div>
       <div class="mb-3 text-center">
         <button type="submit" class="btn btn-success">Редактировать</button>
       </div>

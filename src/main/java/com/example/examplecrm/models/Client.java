@@ -25,14 +25,21 @@ public class Client {
     private String email;
 
     @Column(name = "discount")
-    private Double discount;
+    private Integer discount;
 
     @Column(name = "create_dttm")
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="created_by", referencedColumnName="id")
-    private User user;
+    private User createUser;
+
+    @Column(name = "update_dttm")
+    private LocalDateTime updateDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="updated_by", referencedColumnName="id")
+    private User updateUser;
 
     @Column(name = "reject_flag")
     private Boolean rejectFlag;
@@ -41,8 +48,13 @@ public class Client {
     private void onCreate() {
 
         createDate = LocalDateTime.now();
-        discount = 1.0;
         rejectFlag = false;
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+
+        updateDate = LocalDateTime.now();
     }
 
 }

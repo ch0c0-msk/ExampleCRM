@@ -53,11 +53,20 @@ public class ClientController {
     }
 
     @PostMapping("add_client")
-    public String createClient(Principal principal, @RequestParam String fullName, @RequestParam String email) {
+    public String createClient(Principal principal, @RequestParam String fullName, @RequestParam String email,
+                               @RequestParam String phone, @RequestParam String discount) {
 
         Client client = new Client();
         client.setFullName(fullName);
         client.setEmail(email);
+        client.setPhone(phone);
+        try {
+            client.setDiscount(Integer.parseInt(discount));
+        } catch (NullPointerException npe) {
+            client.setDiscount(0);
+        } catch (NumberFormatException nfe) {
+            client.setDiscount(0);
+        }
         clientService.createClient(principal, client);
         return "redirect:/clients_list";
     }

@@ -13,7 +13,7 @@ public interface ClientRepo extends JpaRepository<Client, Long> {
     @Query("select c from Client c where c.id = ?1")
     Optional<Client> findById(Long id);
 
-    @Query("select c from Client c where c.user = ?1")
+    @Query("select c from Client c where c.createUser = ?1")
     Iterable<Client> findByUser(User user);
 
     @Query("select c from Client c where c.rejectFlag = false order by c.fullName asc nulls last")

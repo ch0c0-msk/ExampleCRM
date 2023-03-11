@@ -78,6 +78,12 @@
       <th>№</th>
       <th>ФИО</th>
       <th>E-mail</th>
+      <th>Телефон</th>
+      <th>Скидка</th>
+      <th>Создан пользователем</th>
+      <th>Дата создания</th>
+      <th>Обновлен пользователем</th>
+      <th>Дата обновления</th>
       <th></th>
       <th></th>
     </tr>
@@ -85,6 +91,12 @@
       <td th:text="${iterStat.index + 1}"></td>
       <td th:text="${el.fullName}"></td>
       <td th:text="${el.email}"></td>
+      <td th:text="${el.phone}"></td>
+      <td th:text="${el.discount} + '%'"></td>
+      <td th:text="${el.createUser.getLogin()}"></td>
+      <td th:text="${#temporals.format(el.createDate, 'dd-MM-yyyy HH:mm')}"></td>
+      <td th:text="${el.updateUser?.getLogin()}"></td>
+      <td th:text="${#temporals.format(el.updateDate, 'dd-MM-yyyy HH:mm')}"></td>
       <td>
         <a th:href="'/edit_client/' + ${el.id} " class="btn btn-warning">Редактировать</a>
       </td>
