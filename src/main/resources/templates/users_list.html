@@ -31,6 +31,26 @@
               <li><a class="dropdown-item" href="#">*</a></li>
             </ul>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Сделки
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/my_deals">Список моих заявок</a></li>
+              <li><a class="dropdown-item" href="/add_deal">Завести заявку</a></li>
+              <li><a class="dropdown-item" href="#">*</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Товары
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/products_list">Список товаров</a></li>
+              <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/add_product">Добавить товар</a></li>
+              <li><a class="dropdown-item" href="#">*</a></li>
+            </ul>
+          </li>
           <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
             <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Панель администратора
@@ -60,7 +80,6 @@
       <th>Роли</th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
     <tr th:each = "el: ${users}">
       <td th:text="${el.id}"></td>
@@ -70,12 +89,12 @@
       <td>
         <a th:href="'/edit_user/' + ${el.id} " class="btn btn-warning">Редактировать</a>
       </td>
-      <td>
+      <td th:if="${el.isActive()} == true">
         <form th:action="'/disable_user/' + ${el.id}" method="post">
           <button class="btn btn-danger" type="submit">Отключить</button>
         </form>
       </td>
-      <td>
+      <td th:if="${el.isActive()} == false">
         <form th:action="'/enable_user/' + ${el.id}" method="post">
           <button class="btn btn-success" type="submit">Включить</button>
         </form>

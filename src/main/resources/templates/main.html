@@ -26,8 +26,18 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <li><a class="dropdown-item" href="/clients_list">Список клиентов</a></li>
+                <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/clients_all_list">Список всех клиентов</a></li>
                 <li><a class="dropdown-item" href="/add_client">Добавить клиента</a></li>
-                <li><a class="dropdown-item" href="#">*</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Сделки
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="/deals_list">Список заявок</a></li>
+                <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/deals_all_list">Список всех заявок</a></li>
+                <li><a class="dropdown-item" href="/add_deal">Завести заявку</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -37,7 +47,6 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <li><a class="dropdown-item" href="/products_list">Список товаров</a></li>
                 <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/add_product">Добавить товар</a></li>
-                <li><a class="dropdown-item" href="#">*</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">

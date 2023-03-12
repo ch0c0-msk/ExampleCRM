@@ -2,8 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Список клиентов</title>
-  <link rel="stylesheet" href="css/clients_list.css"/>
+  <title>Главная</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 </head>
@@ -71,55 +70,24 @@
     </div>
   </nav>
 </header>
-<div class="container mt-5">
-  <a class="btn btn-info text-white" th:href="@{/clients_list/export/excel}">Экспортировать в формате Excel</a>
-</div>
 <div class="container">
-  <table class="table table-striped table-bordered">
-    <tr>
-      <th>№</th>
-      <th>ФИО</th>
-      <th>E-mail</th>
-      <th>Телефон</th>
-      <th>Скидка</th>
-      <th>Создан пользователем</th>
-      <th>Дата создания</th>
-      <th>Обновлен пользователем</th>
-      <th>Дата обновления</th>
-      <th>Коммуникация</th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr th:each = "el, iterStat: ${clients}">
-      <td th:text="${iterStat.index + 1}"></td>
-      <td th:text="${el.fullName}"></td>
-      <td th:text="${el.email}"></td>
-      <td th:text="${el.phone}"></td>
-      <td th:text="${el.discount} + '%'"></td>
-      <td th:text="${el.createUser.getLogin()}"></td>
-      <td th:text="${#temporals.format(el.createDate, 'dd-MM-yyyy HH:mm')}"></td>
-      <td th:text="${el.updateUser?.getLogin()}"></td>
-      <td th:text="${#temporals.format(el.updateDate, 'dd-MM-yyyy HH:mm')}"></td>
-      <td th:if="${el.rejectFlag} == false">
-        <form th:action="'/reject_client/' + ${el.id}" method="post">
-          <button class="btn btn-secondary" type="submit">Отключить</button>
-        </form>
-      </td>
-      <td th:if="${el.rejectFlag} == true">
-        <form th:action="'/reject_client/' + ${el.id}" method="post">
-          <button class="btn btn-success" type="submit">Включить</button>
-        </form>
-      </td>
-      <td>
-        <a th:href="'/edit_client/' + ${el.id} " class="btn btn-warning">Редактировать</a>
-      </td>
-      <td>
-        <form th:action="'/remove_client/' + ${el.id}" method="post">
-          <button class="btn btn-danger" type="submit">Удалить</button>
-        </form>
-      </td>
-    </tr>
-  </table>
+  <form method="post">
+    <div class="mb-5 mt-5">
+      <select class="form-select" name="client_id">
+        <option selected>Выберите клиента</option>
+        <option th:each="client : ${clients}" th:text="${client.fullName}" th:value="${client.id}"></option>
+      </select>
+    </div>
+    <div class="mb-5 mt-5">
+      <select class="form-select" name="product_id">
+        <option selected>Выберите товар или услугу</option>
+        <option th:each="product : ${products}" th:text="${product.name}" th:value="${product.id}"></option>
+      </select>
+    </div>
+    <div class="mb-5 mt-5">
+      <input class="btn btn-success" type="submit" value="Завести заявку">
+    </div>
+  </form>
 </div>
 </body>
 </html>

@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,34 +22,73 @@ public class ClientService {
     private final UserRepo userRepo;
 
     public boolean createClient(Principal principal, Client client) {
-        client.setUser(getUserByPrincipal(principal));
+        client.setCreateUser((getUserByPrincipal(principal)));
         clientRepo.save(client);
         log.info("Saving new client with attributes: {}",client.toString());
         return true;
     }
 
-    public boolean modifyClient(Client client) {
+    public boolean modifyClient(Client client, Principal principal) {
 
-        if (clientRepo.findById(client.getId()) == null) {
-            log.info("Client with id: {} doesnt exist", client.getId());
-            return false;
+        if (client.getCreateUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+
+            if (clientRepo.findById(client.getId()) == null) {
+                log.info("Client with id: {} doesnt exist", client.getId());
+                return false;
+            } else {
+                client.setUpdateUser(getUserByPrincipal(principal));
+                clientRepo.save(client);
+                log.info("Modify client with new attributes: {}", client.toString());
+                return true;
+            }
         } else {
-            clientRepo.save(client);
-            log.info("Modify client with new attributes: {}",client.toString());
-            return true;
+            log.info("It`s not your client or you haven`t a Manager role");
+            return false;
         }
     }
 
-    public boolean deleteClient(Long id) {
+    public boolean deleteClient(Long id, Principal principal) {
         Client client = clientRepo.findById(id).orElse(null);
         if (client == null) {
             log.info("Client with id: {} doesnt exist", id);
             return false;
         } else {
-            clientRepo.delete(client);
-            log.info("Client with attributes: {} was deleted", client.toString());
-            return true;
+            if (client.getCreateUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+
+                clientRepo.delete(client);
+                log.info("Client with attributes: {} was deleted", client.toString());
+                return true;
+            } else {
+
+                log.info("It`s not your client or you haven`t a Manager role");
+                return false;
+            }
         }
+    }
+
+    public boolean changeRejectClient(Long id, Principal principal) {
+
+        Client client = clientRepo.findById(id).orElse(null);
+        if (client == null) {
+            log.info("Client with id: {} doesnt exist", id);
+            return false;
+        } else {
+            if (client.getCreateUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+
+                client.setRejectFlag(!client.getRejectFlag());
+                clientRepo.save(client);
+                log.info("Reject flag successfully changed");
+                return true;
+            } else {
+
+                log.info("It`s not your client or you haven`t a Manager role");
+                return false;
+            }
+        }
+    }
+
+    public List<Client> getListForExport() {
+        return clientRepo.findByRejectNone();
     }
 
     public User getUserByPrincipal(Principal principal) {

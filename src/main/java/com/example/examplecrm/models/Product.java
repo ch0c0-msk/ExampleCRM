@@ -26,10 +26,23 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="created_by", referencedColumnName="id")
-    private User user;
+    private User createUser;
+
+    @Column(name = "update_dttm")
+    private LocalDateTime updateDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="updated_by", referencedColumnName="id")
+    private User updateUser;
 
     @PrePersist
     private void onCreate() {
         createDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+
+        updateDate = LocalDateTime.now();
     }
 }

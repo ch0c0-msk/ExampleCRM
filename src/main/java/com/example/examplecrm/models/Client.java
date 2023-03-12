@@ -24,22 +24,37 @@ public class Client {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "discount", columnDefinition = "real default 1.0")
-    private Double discount;
+    @Column(name = "discount")
+    private Integer discount;
 
     @Column(name = "create_dttm")
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="created_by", referencedColumnName="id")
-    private User user;
+    private User createUser;
 
-    @Column(name = "reject_flag", columnDefinition = "boolean default false")
-    private Boolean rejectFlag = false;
+    @Column(name = "update_dttm")
+    private LocalDateTime updateDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="updated_by", referencedColumnName="id")
+    private User updateUser;
+
+    @Column(name = "reject_flag")
+    private Boolean rejectFlag;
 
     @PrePersist
     private void onCreate() {
+
         createDate = LocalDateTime.now();
+        rejectFlag = false;
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+
+        updateDate = LocalDateTime.now();
     }
 
 }
