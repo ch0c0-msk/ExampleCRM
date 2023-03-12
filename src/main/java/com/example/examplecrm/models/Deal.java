@@ -25,7 +25,11 @@ public class Deal {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="created_by", referencedColumnName="id")
-    private User user;
+    private User createUser;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="updated_by", referencedColumnName="id")
+    private User updateUser;
 
     @Column(name = "status")
     private String status;
@@ -41,5 +45,11 @@ public class Deal {
 
         createDate = LocalDateTime.now();
         status = "NEW";
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+
+        updateDate = LocalDateTime.now();
     }
 }

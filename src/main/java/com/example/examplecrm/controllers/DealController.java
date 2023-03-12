@@ -10,6 +10,7 @@ import com.example.examplecrm.repos.ProductRepo;
 import com.example.examplecrm.repos.UserRepo;
 import com.example.examplecrm.services.DealService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,16 +50,25 @@ public class DealController {
         deal.setClient(clientRepo.findById(client_id).orElse(null));
         deal.setProduct(productRepo.findById(product_id).orElse(null));
         dealService.createDeal(principal, deal);
-        return "redirect:/my_deals";
+        return "redirect:/deals_list";
     }
 
-    @GetMapping("/my_deals")
+    @GetMapping("/deals_list")
     public String myDealList(Principal principal, Model model) {
 
         User user = userRepo.findByLogin(principal.getName());
         Iterable<Deal> deals = dealRepo.findByUser(user);
         model.addAttribute("deals",deals);
-        return "my_deals_list";
+        return "deals_list";
+    }
+
+    @PreAuthorize("hasAuthority('MANAGER')")
+    @GetMapping("/deals_all_list")
+    public String allDealList(Principal principal, Model model) {
+
+        Iterable<Deal> deals = dealRepo.findAll();
+        model.addAttribute("deals",deals);
+        return "deals_list";
     }
 
     @GetMapping("/edit_deal/{id}")
@@ -79,13 +88,13 @@ public class DealController {
         deal.setStatus(status);
         deal.setUpdateDate(LocalDateTime.now());
         dealService.modifyDeal(principal, deal);
-        return "redirect:/my_deals";
+        return "redirect:/deals_list";
     }
 
     @PostMapping("/remove_deal/{id}")
     public String removeDeal(@PathVariable(value = "id") Long id, Principal principal) {
 
         dealService.deleteDeal(principal, id);
-        return "redirect:/my_deals";
+        return "redirect:/deals_list";
     }
 }

@@ -62,12 +62,12 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('MANAGER')")
     @PostMapping("/edit_product/{id}")
-    public String modifyProduct(@PathVariable(value = "id") Long id, @RequestParam String name, @RequestParam String price) {
+    public String modifyProduct(@PathVariable(value = "id") Long id, Principal principal, @RequestParam String name, @RequestParam String price) {
 
         Product product = productRepo.findById(id).orElse(null);
         product.setName(name);
         product.setPrice(Double.parseDouble(price));
-        productService.modifyProduct(product);
+        productService.modifyProduct(product, principal);
         return "redirect:/products_list";
     }
 

@@ -66,6 +66,27 @@ public class ClientService {
         }
     }
 
+    public boolean changeRejectClient(Long id, Principal principal) {
+
+        Client client = clientRepo.findById(id).orElse(null);
+        if (client == null) {
+            log.info("Client with id: {} doesnt exist", id);
+            return false;
+        } else {
+            if (client.getCreateUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+
+                client.setRejectFlag(!client.getRejectFlag());
+                clientRepo.save(client);
+                log.info("Reject flag successfully changed");
+                return true;
+            } else {
+
+                log.info("It`s not your client or you haven`t a Manager role");
+                return false;
+            }
+        }
+    }
+
     public List<Client> getListForExport() {
         return clientRepo.findByRejectNone();
     }

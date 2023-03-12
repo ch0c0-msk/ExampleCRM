@@ -80,7 +80,6 @@
       <th>Роли</th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
     <tr th:each = "el: ${users}">
       <td th:text="${el.id}"></td>
@@ -90,12 +89,12 @@
       <td>
         <a th:href="'/edit_user/' + ${el.id} " class="btn btn-warning">Редактировать</a>
       </td>
-      <td>
+      <td th:if="${el.isActive()} == true">
         <form th:action="'/disable_user/' + ${el.id}" method="post">
           <button class="btn btn-danger" type="submit">Отключить</button>
         </form>
       </td>
-      <td>
+      <td th:if="${el.isActive()} == false">
         <form th:action="'/enable_user/' + ${el.id}" method="post">
           <button class="btn btn-success" type="submit">Включить</button>
         </form>

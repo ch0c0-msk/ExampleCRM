@@ -12,6 +12,6 @@ public interface DealRepo extends JpaRepository<Deal, Long> {
     @Query("select d from Deal d where d.id = ?1")
     Optional<Deal> findById(Long id);
 
-    @Query("select d from Deal d where d.user = ?1")
+    @Query("select d from Deal d where d.createUser = ?1")
     Iterable<Deal> findByUser(User user);
 }

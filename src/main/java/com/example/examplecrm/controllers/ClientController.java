@@ -5,6 +5,7 @@ import com.example.examplecrm.models.Client;
 import com.example.examplecrm.repos.ClientRepo;
 import com.example.examplecrm.services.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,10 +39,10 @@ public class ClientController {
         return "clients_list";
     }
 
-//    @PreAuthorize("hasAuthority('MANAGER')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     @GetMapping("/clients_all_list")
     public String clientAllList(Model model) {
-        Iterable<Client> clients = clientRepo.findAll();
+        Iterable<Client> clients = clientRepo.findAllOrderByCreateDate();
         model.addAttribute("clients",clients);
         return "clients_list";
     }
@@ -112,6 +113,13 @@ public class ClientController {
 
         ClientExcelExporter excelExporter = new ClientExcelExporter(listClients);
         excelExporter.export(response);
+        return "redirect:/clients_list";
+    }
+
+    @PostMapping("reject_client/{id}")
+    public String rejectClient(Principal principal, @PathVariable(value = "id") Long id) {
+
+        clientService.changeRejectClient(id, principal);
         return "redirect:/clients_list";
     }
 }

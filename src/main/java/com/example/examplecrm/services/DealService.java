@@ -3,6 +3,7 @@ package com.example.examplecrm.services;
 import com.example.examplecrm.models.Client;
 import com.example.examplecrm.models.Deal;
 import com.example.examplecrm.models.User;
+import com.example.examplecrm.models.enums.Role;
 import com.example.examplecrm.repos.DealRepo;
 import com.example.examplecrm.repos.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class DealService {
     private final UserRepo userRepo;
 
     public boolean createDeal(Principal principal, Deal deal) {
-        deal.setUser(getUserByPrincipal(principal));
+        deal.setCreateUser(getUserByPrincipal(principal));
         dealRepo.save(deal);
         log.info("Saving new deal with attributes: {}",deal.toString());
         return true;
@@ -31,7 +32,8 @@ public class DealService {
             log.info("Deal with id: {} doesnt exist", deal.getId());
             return false;
         } else {
-            if (getUserByPrincipal(principal).getId() == deal.getUser().getId()) {
+            if (getUserByPrincipal(principal).getId() == deal.getCreateUser().getId() | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+                deal.setUpdateUser(getUserByPrincipal(principal));
                 dealRepo.save(deal);
                 log.info("Modify deal with new attributes: {}", deal.toString());
                 return true;
@@ -49,7 +51,7 @@ public class DealService {
             log.info("Deal with id: {} doesnt exist", id);
             return false;
         } else {
-            if (getUserByPrincipal(principal).getId() == deal.getUser().getId()) {
+            if (getUserByPrincipal(principal).getId() == deal.getCreateUser().getId() | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
                 dealRepo.delete(deal);
                 log.info("Deal with attributes: {} was deleted", deal.toString());
                 return true;

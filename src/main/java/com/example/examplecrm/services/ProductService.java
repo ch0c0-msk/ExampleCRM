@@ -19,18 +19,19 @@ public class ProductService {
     private final UserRepo userRepo;
 
     public boolean createProduct(Principal principal, Product product) {
-        product.setUser(getUserByPrincipal(principal));
+        product.setCreateUser(getUserByPrincipal(principal));
         productRepo.save(product);
         log.info("Saving new product with attributes: {}",product.toString());
         return true;
     }
 
-    public boolean modifyProduct(Product product) {
+    public boolean modifyProduct(Product product, Principal principal) {
 
         if (productRepo.findById(product.getId()) == null) {
             log.info("Product with id: {} doesnt exist", product.getId());
             return false;
         } else {
+            product.setUpdateUser(getUserByPrincipal(principal));
             productRepo.save(product);
             log.info("Modify product with new attributes: {}",product.toString());
             return true;

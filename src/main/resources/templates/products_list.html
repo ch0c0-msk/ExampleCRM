@@ -79,6 +79,8 @@
             <th>Цена</th>
             <th>Добавлен</th>
             <th>Дата добавления</th>
+            <th>Обновлен</th>
+            <th>Дата обновления</th>
             <th sec:authorize="hasAuthority('MANAGER')"></th>
             <th sec:authorize="hasAuthority('MANAGER')"></th>
         </tr>
@@ -86,8 +88,10 @@
             <td th:text="${iterStat.index + 1}"></td>
             <td th:text="${el.name}"></td>
             <td th:text="${el.price}"></td>
-            <td th:text="${el.user.getLogin()}"></td>
+            <td th:text="${el.createUser.getLogin()}"></td>
             <td th:text="${#temporals.format(el.createDate, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${el.updateUser?.getLogin()}"></td>
+            <td th:text="${#temporals.format(el.updateDate, 'dd-MM-yyyy HH:mm')}"></td>
             <td sec:authorize="hasAuthority('MANAGER')">
                 <a th:href="'/edit_product/' + ${el.id} " class="btn btn-warning">Редактировать</a>
             </td>
