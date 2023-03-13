@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +60,21 @@ public class DealService {
                 log.info("It`s now your deal");
                 return false;
             }
+        }
+    }
+
+    public List<Deal> getListForExport(Principal principal) {
+        return dealRepo.findByStatusAndUser(getUserByPrincipal(principal));
+    }
+
+    public List<Deal> getListAllForExport() {
+        return dealRepo.findByStatus();
+    }
+
+    public void setDealStatus(List<Deal> dealList) {
+        for (Deal deal : dealList) {
+            deal.setStatus("IN_PROCESS");
+            dealRepo.save(deal);
         }
     }
 

@@ -87,8 +87,12 @@ public class ClientService {
         }
     }
 
-    public List<Client> getListForExport() {
+    public List<Client> getListAllForExport() {
         return clientRepo.findByRejectNone();
+    }
+
+    public List<Client> getListForExport(Principal principal) {
+        return clientRepo.findByRejectNoneAndUser(getUserByPrincipal(principal));
     }
 
     public User getUserByPrincipal(Principal principal) {

@@ -21,6 +21,9 @@ public interface ClientRepo extends JpaRepository<Client, Long> {
     @Query("select c from Client c where c.rejectFlag = false order by c.fullName asc nulls last")
     List<Client> findByRejectNone();
 
+    @Query("select c from Client c where c.rejectFlag = false and c.createUser = ?1 order by c.fullName asc nulls last")
+    List<Client> findByRejectNoneAndUser(User user);
+
     @Query("select c from Client c order by c.createDate desc")
     List<Client> findAllOrderByCreateDate();
 

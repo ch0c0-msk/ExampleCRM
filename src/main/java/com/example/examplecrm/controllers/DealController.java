@@ -1,5 +1,7 @@
 package com.example.examplecrm.controllers;
 
+import com.example.examplecrm.exporters.ClientExcelExporter;
+import com.example.examplecrm.exporters.DealExcelExporter;
 import com.example.examplecrm.models.Client;
 import com.example.examplecrm.models.Deal;
 import com.example.examplecrm.models.Product;
@@ -18,9 +20,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -96,5 +104,42 @@ public class DealController {
 
         dealService.deleteDeal(principal, id);
         return "redirect:/deals_list";
+    }
+
+    @GetMapping("/deals_list/export/excel")
+    public String exportDealsList(HttpServletResponse response, Principal principal) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=active_deals_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        dealService.setDealStatus(dealService.getListForExport(principal));
+        List<Deal> listDeals = dealService.getListForExport(principal);
+
+        DealExcelExporter excelExporter = new DealExcelExporter(listDeals);
+        excelExporter.export(response);
+        return "redirect:/deals_list";
+    }
+
+    @PreAuthorize("hasAuthority('MANAGER')")
+    @GetMapping("/deals_all_list/export/excel")
+    public String exportAllDealsList(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=all_active_deals_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        dealService.setDealStatus(dealService.getListAllForExport());
+        List<Deal> listDeals = dealService.getListAllForExport();
+
+        DealExcelExporter excelExporter = new DealExcelExporter(listDeals);
+        excelExporter.export(response);
+        return "redirect:/deals_all_list";
     }
 }

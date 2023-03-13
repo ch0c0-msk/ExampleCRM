@@ -5,7 +5,6 @@ import com.example.examplecrm.models.Client;
 import com.example.examplecrm.repos.ClientRepo;
 import com.example.examplecrm.services.ClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,11 +82,13 @@ public class ClientController {
     }
 
     @PostMapping("/edit_client/{id}")
-    public String modifyClient(Principal principal, @PathVariable(value = "id") Long id, @RequestParam String fullName, @RequestParam String email) {
+    public String modifyClient(Principal principal, @PathVariable(value = "id") Long id, @RequestParam String fullName, @RequestParam String email,
+                               @RequestParam Integer discount) {
 
         Client client = clientRepo.findById(id).orElse(new Client());
         client.setFullName(fullName);
         client.setEmail(email);
+        client.setDiscount(discount);
         clientService.modifyClient(client, principal);
         return "redirect:/clients_list";
     }
@@ -100,7 +101,7 @@ public class ClientController {
     }
 
     @GetMapping("/clients_list/export/excel")
-    public String exportClientsList(HttpServletResponse response) throws IOException {
+    public String exportClientsList(HttpServletResponse response, Principal principal) throws IOException {
         response.setContentType("application/octet-stream");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -109,11 +110,28 @@ public class ClientController {
         String headerValue = "attachment; filename=clients_" + currentDateTime + ".xlsx";
         response.setHeader(headerKey, headerValue);
 
-        List<Client> listClients = clientService.getListForExport();
+        List<Client> listClients = clientService.getListForExport(principal);
 
         ClientExcelExporter excelExporter = new ClientExcelExporter(listClients);
         excelExporter.export(response);
         return "redirect:/clients_list";
+    }
+
+    @GetMapping("/clients_all_list/export/excel")
+    public String exportAllClientsList(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=all_clients_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Client> listClients = clientService.getListAllForExport();
+
+        ClientExcelExporter excelExporter = new ClientExcelExporter(listClients);
+        excelExporter.export(response);
+        return "redirect:/clients_all_list";
     }
 
     @PostMapping("reject_client/{id}")
