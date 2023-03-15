@@ -49,6 +49,16 @@
                 <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/add_product">Добавить товар</a></li>
               </ul>
             </li>
+            <li class="nav-item dropdown" sec:authorize="hasAuthority('MANAGER')">
+              <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Отчеты
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="#">*</a></li>
+                <li><a class="dropdown-item" href="#">*</a></li>
+                <li><a class="dropdown-item" href="#">*</a></li>
+              </ul>
+            </li>
             <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
               <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Панель администратора
@@ -56,8 +66,11 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <li><a class="dropdown-item" href="/users_list">Список пользователей</a></li>
                 <li><a class="dropdown-item" href="/add_user">Добавить пользователя</a></li>
-                <li><a class="dropdown-item" href="#">*</a></li>
+                <li><a class="dropdown-item" href="/support_list">Обращения пользователей</a></li>
               </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-2" href="/support_send">Написать в поддержку</a>
             </li>
             <li class="nav-item">
               <form th:action="@{/logout}" method="post">

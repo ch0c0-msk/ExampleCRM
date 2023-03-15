@@ -36,7 +36,7 @@ public class UserService {
             return false;
         } else {
             userRepo.save(user);
-            log.info("Modify client with new attributes: {}",user.toString());
+            log.info("Modify user with new attributes: {}",user.toString());
             return true;
         }
     }
@@ -44,12 +44,12 @@ public class UserService {
     public boolean disableUser(Long id) {
         User user = userRepo.findById(id).orElse(null);
         if (user == null) {
-            log.info("Client with id: {} doesnt exist", id);
+            log.info("User with id: {} doesnt exist", id);
             return false;
         } else {
             user.setActive(false);
             userRepo.save(user);
-            log.info("Client with attributes: {} was disabled", user.toString());
+            log.info("User with attributes: {} was disabled", user.toString());
             return true;
         }
     }
@@ -57,12 +57,12 @@ public class UserService {
     public boolean enableUser(Long id) {
         User user = userRepo.findById(id).orElse(null);
         if (user == null) {
-            log.info("Client with id: {} doesnt exist", id);
+            log.info("User with id: {} doesnt exist", id);
             return false;
         } else {
             user.setActive(true);
             userRepo.save(user);
-            log.info("Client with attributes: {} was enabled", user.toString());
+            log.info("User with attributes: {} was enabled", user.toString());
             return true;
         }
     }

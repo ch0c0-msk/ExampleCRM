@@ -1,5 +1,6 @@
 package com.example.examplecrm.services;
 
+import com.example.examplecrm.importers.DealExcelImporter;
 import com.example.examplecrm.models.Client;
 import com.example.examplecrm.models.Deal;
 import com.example.examplecrm.models.User;
@@ -9,9 +10,12 @@ import com.example.examplecrm.repos.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +79,29 @@ public class DealService {
         for (Deal deal : dealList) {
             deal.setStatus("IN_PROCESS");
             dealRepo.save(deal);
+        }
+    }
+
+    public void updateDealStatus(MultipartFile file, Principal principal) {
+        try {
+
+            List<Deal> dealList = DealExcelImporter.excelToDeals(file.getInputStream());
+            for (Deal d : dealList) {
+
+                Deal deal = dealRepo.findById(d.getId()).orElse(null);
+                if (deal != null) {
+                    if (deal.getCreateUser() == getUserByPrincipal(principal) | getUserByPrincipal(principal).getAuthorities().contains(Role.MANAGER)) {
+                        deal.setStatus(d.getStatus());
+                        dealRepo.save(deal);
+                    } else {
+                        log.info("It`s now your deal");
+                    }
+                } else {
+                    log.info("Deal with id {} doesnt exist",d.getId().toString());
+                }
+            }
+        } catch (IOException ioe) {
+            throw new RuntimeException("fail to store excel data: " + ioe.getMessage());
         }
     }
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -140,6 +141,19 @@ public class DealController {
 
         DealExcelExporter excelExporter = new DealExcelExporter(listDeals);
         excelExporter.export(response);
+        return "redirect:/deals_all_list";
+    }
+
+    @PostMapping("/deals_list/import/excel")
+    public String importDealsList(@RequestParam MultipartFile file, Principal principal) throws IOException {
+        dealService.updateDealStatus(file, principal);
+        return "redirect:/deals_list";
+    }
+
+    @PreAuthorize("hasAuthority('MANAGER')")
+    @PostMapping("/deals_all_list/import/excel")
+    public String importAllDealsList(@RequestParam MultipartFile file, Principal principal) throws IOException {
+        dealService.updateDealStatus(file, principal);
         return "redirect:/deals_all_list";
     }
 }
