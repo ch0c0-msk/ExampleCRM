@@ -1,6 +1,5 @@
 package com.example.examplecrm.controllers;
 
-import com.example.examplecrm.exporters.ClientExcelExporter;
 import com.example.examplecrm.exporters.DealExcelExporter;
 import com.example.examplecrm.models.Client;
 import com.example.examplecrm.models.Deal;
@@ -11,6 +10,7 @@ import com.example.examplecrm.repos.DealRepo;
 import com.example.examplecrm.repos.ProductRepo;
 import com.example.examplecrm.repos.UserRepo;
 import com.example.examplecrm.services.DealService;
+import com.example.examplecrm.services.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -40,6 +40,7 @@ public class DealController {
     private final DealRepo dealRepo;
     private final ClientRepo clientRepo;
     private final DealService dealService;
+    private final EmailService emailService;
 
     @GetMapping("/add_deal")
     public String addDeal(Model model, Principal principal) {
@@ -155,5 +156,26 @@ public class DealController {
     public String importAllDealsList(@RequestParam MultipartFile file, Principal principal) throws IOException {
         dealService.updateDealStatus(file, principal);
         return "redirect:/deals_all_list";
+    }
+
+    @GetMapping("/send_email")
+    public String sendEmail(Model model, Principal principal) {
+
+        User user = userRepo.findByLogin(principal.getName());
+        Iterable<Client> clients = clientRepo.findByUser(user);
+        model.addAttribute("clients",clients);
+        Iterable<Product> products = productRepo.findAll();
+        model.addAttribute("products",products);
+        return "send_email";
+    }
+
+    @PostMapping("/send_email")
+    public String sendEmailOffer(Principal principal, @RequestParam Long client_id, @RequestParam Long product_id) {
+
+        Deal deal = new Deal();
+        deal.setClient(clientRepo.findById(client_id).orElse(null));
+        deal.setProduct(productRepo.findById(product_id).orElse(null));
+        dealService.sendClientOffer(deal, principal);
+        return "redirect:/deals_list";
     }
 }

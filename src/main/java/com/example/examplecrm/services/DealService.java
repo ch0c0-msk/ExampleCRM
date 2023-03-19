@@ -24,6 +24,7 @@ public class DealService {
 
     private final DealRepo dealRepo;
     private final UserRepo userRepo;
+    private final EmailService emailService;
 
     public boolean createDeal(Principal principal, Deal deal) {
         deal.setCreateUser(getUserByPrincipal(principal));
@@ -68,11 +69,27 @@ public class DealService {
     }
 
     public List<Deal> getListForExport(Principal principal) {
+
         return dealRepo.findByStatusAndUser(getUserByPrincipal(principal));
     }
 
     public List<Deal> getListAllForExport() {
+
         return dealRepo.findByStatus();
+    }
+
+    public void sendClientOffer(Deal deal, Principal principal) {
+
+        if (getUserByPrincipal(principal).getId() == deal.getClient().getCreateUser().getId()) {
+             try {
+                 this.createDeal(principal, deal);
+                 emailService.sendClientOffer(deal);
+             } catch (Exception err) {
+                 log.info(err.getMessage());
+             }
+        } else {
+            log.info("It`s now your client");
+        }
     }
 
     public void setDealStatus(List<Deal> dealList) {

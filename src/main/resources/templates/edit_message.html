@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+  <form method="post">
+    <div class="mb-5 mt-5">
+      <input class="form-control border border-dark" type="text" id="label" name="label" placeholder="Название проблемы">
+    </div>
+    <div class="mb-5 mt-5 form-group">
+      <label for="exampleFormControlSelect1" class="mb-2 ml-2">Критичность задачи</label>
+      <select class="form-select" name="importance" id="exampleFormControlSelect1">
+        <option value="HIGH">Блокирует работу</option>
+        <option value="MEDIUM">Сильно усложняет работу</option>
+        <option value="LOW">Практически не влияет на рабочий процесс</option>
+      </select>
+    </div>
+    <div class="mb-5 mt-5">
+            <textarea type="text" class="form-control border border-dark" id="exampleFormControlInput1"
+                      placeholder="Опишите кратко проблему" name="text" rows="5"></textarea>
+    </div>
+    <div class="mb-5 mt-5">
+      <input class="btn btn-success" type="submit" value="Редактировать">
+    </div>
+  </form>
+</div>
+</body>
+</html>
