@@ -24,4 +24,7 @@ public interface DealRepo extends JpaRepository<Deal, Long> {
     @Query("select d from Deal d where d.status not in('SUCCESS','FAILED') and d.createUser = ?1 order by d.createDate desc nulls last")
     List<Deal> findByStatusAndUser(User user);
 
+    @Query("select count(d) from Deal d")
+    Long findCount();
+
 }
