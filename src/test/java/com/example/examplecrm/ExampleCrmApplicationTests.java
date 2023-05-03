@@ -8,6 +8,7 @@ class ExampleCrmApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
