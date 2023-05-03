@@ -2,6 +2,7 @@ package com.example.examplecrm.controllers;
 
 import com.example.examplecrm.models.User;
 import com.example.examplecrm.models.enums.Role;
+import com.example.examplecrm.repos.MessageRepo;
 import com.example.examplecrm.repos.UserRepo;
 import com.example.examplecrm.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class AdminController {
     private final UserService userService;
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final MessageRepo messageRepo;
 
     @GetMapping("/add_user")
     public String addUser() {
@@ -81,5 +83,12 @@ public class AdminController {
 
         userService.enableUser(id);
         return "redirect:/users_list";
+    }
+
+    @GetMapping("/support_list")
+    public String supportList(Model model) {
+
+        model.addAttribute("messages",messageRepo.findAll());
+        return "support_list";
     }
 }

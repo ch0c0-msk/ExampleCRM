@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+    <span>
+        <p th:text="'Здравствуйте, ' + ${name} + '!'"></p>
+        <p th:text="'Вам доступен ' + ${product} + ' по специальной цене ' + ${price} + ' рублей'"></p>
+        <p th:text="'Если вам заинтересовало предложение, пожалуйста, напиши нам на почту ' + ${email}"></p>
+        <p th:text="'Или позвоните по номеру ' + ${phone}"></p>
+        <p>Письмо отправлено автоматически, отвечать на него не нужно</p>
+    </span>
+</body>
+</html>

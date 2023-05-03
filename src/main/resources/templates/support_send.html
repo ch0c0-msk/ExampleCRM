@@ -2,8 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Список клиентов</title>
-    <link rel="stylesheet" href="css/clients_list.css"/>
+    <title>Главная</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 </head>
@@ -27,8 +26,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="/clients_list">Список клиентов</a></li>
+                            <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/clients_all_list">Список всех клиентов</a></li>
                             <li><a class="dropdown-item" href="/add_client">Добавить клиента</a></li>
-                            <li><a class="dropdown-item" href="#">*</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -36,9 +35,9 @@
                             Сделки
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="/my_deals">Список моих заявок</a></li>
+                            <li><a class="dropdown-item" href="/deals_list">Список заявок</a></li>
+                            <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/deals_all_list">Список всех заявок</a></li>
                             <li><a class="dropdown-item" href="/add_deal">Завести заявку</a></li>
-                            <li><a class="dropdown-item" href="#">*</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -48,6 +47,15 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="/products_list">Список товаров</a></li>
                             <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/add_product">Добавить товар</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasAuthority('MANAGER')">
+                        <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Отчеты
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">*</a></li>
+                            <li><a class="dropdown-item" href="#">*</a></li>
                             <li><a class="dropdown-item" href="#">*</a></li>
                         </ul>
                     </li>
@@ -58,8 +66,11 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="/users_list">Список пользователей</a></li>
                             <li><a class="dropdown-item" href="/add_user">Добавить пользователя</a></li>
-                            <li><a class="dropdown-item" href="#">*</a></li>
+                            <li><a class="dropdown-item" href="/support_list">Обращения пользователей</a></li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="/support_send">Написать в поддержку</a>
                     </li>
                     <li class="nav-item">
                         <form th:action="@{/logout}" method="post">
@@ -71,64 +82,27 @@
         </div>
     </nav>
 </header>
-<div class="container-fluid mt-5">
-    <div class="row">
-        <div class="col-3">
-            <a class="btn btn-info text-white" th:href="@{__${#httpServletRequest.requestURI}__/export/excel}">Экспортировать в формате Excel</a>
+<div class="container">
+    <form method="post">
+        <div class="mb-5 mt-5">
+            <input class="form-control border border-dark" type="text" id="label" name="label" placeholder="Название проблемы">
         </div>
-        <div class="col-6">
-            <form th:action="@{__${#httpServletRequest.requestURI}__/import/excel}" method="post" enctype="multipart/form-data">
-                <div class="row">
-                    <div class="col-8">
-                        <input class="form-control" type="file" name="file" id="formFile">
-                    </div>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-info text-white">Импортировать</button>
-                    </div>
-                </div>
-            </form>
+        <div class="mb-5 mt-5 form-group">
+            <label for="exampleFormControlSelect1" class="mb-2 ml-2">Критичность задачи</label>
+            <select class="form-select" name="importance" id="exampleFormControlSelect1">
+                <option value="HIGH">Блокирует работу</option>
+                <option value="MEDIUM">Сильно усложняет работу</option>
+                <option value="LOW">Практически не влияет на рабочий процесс</option>
+            </select>
         </div>
-    </div>
-</div>
-<div class="container-fluid px-10">
-    <table class="table table-striped table-bordered">
-        <tr>
-            <th>№</th>
-            <th>Клиент</th>
-            <th>Телефон клиента</th>
-            <th>Email клиента</th>
-            <th>Название продукта</th>
-            <th>Цена с учетом скидки</th>
-            <th>Статус</th>
-            <th>Создан пользователем</th>
-            <th>Дата создания</th>
-            <th>Обновлен пользователем</th>
-            <th>Дата обновления</th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr th:each = "el, iterStat: ${deals}">
-            <td th:text="${iterStat.index + 1}"></td>
-            <td th:text="${el.client.fullName}"></td>
-            <td th:text="${el.client.phone}"></td>
-            <td th:text="${el.client.email}"></td>
-            <td th:text="${el.product.name}"></td>
-            <td th:text="${el.product.price * (1 + el.client.discount / 100)}"></td>
-            <td th:text="${el.status}"></td>
-            <td th:text="${el.createUser.getLogin()}"></td>
-            <td th:text="${#temporals.format(el.createDate, 'dd-MM-yyyy HH:mm')}"></td>
-            <td th:text="${el.updateUser?.getLogin()}"></td>
-            <td th:text="${#temporals.format(el.updateDate, 'dd-MM-yyyy HH:mm')}"></td>
-            <td>
-                <a th:href="'/edit_deal/' + ${el.id} " class="btn btn-warning">Редактировать</a>
-            </td>
-            <td>
-                <form th:action="'/remove_deal/' + ${el.id}" method="post">
-                    <button class="btn btn-danger" type="submit">Удалить</button>
-                </form>
-            </td>
-        </tr>
-    </table>
+        <div class="mb-5 mt-5">
+            <textarea type="text" class="form-control border border-dark" id="exampleFormControlInput1"
+                      placeholder="Опишите кратко проблему" name="text" rows="5"></textarea>
+        </div>
+        <div class="mb-5 mt-5">
+            <input class="btn btn-success" type="submit" value="Отправить в тех. поддержку">
+        </div>
+    </form>
 </div>
 </body>
 </html>

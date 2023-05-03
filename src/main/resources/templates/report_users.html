@@ -2,8 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Список клиентов</title>
-  <link rel="stylesheet" href="css/clients_list.css"/>
+  <title>Главная</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 </head>
@@ -91,55 +90,61 @@
     </div>
   </nav>
 </header>
-<div class="container mt-5">
-  <a class="btn btn-info text-white" th:href="@{__${#httpServletRequest.requestURI}__/export/excel}">Экспортировать в формате Excel</a>
-</div>
 <div class="container">
-  <table class="table table-striped table-bordered">
-    <tr>
-      <th>№</th>
-      <th>ФИО</th>
-      <th>E-mail</th>
-      <th>Телефон</th>
-      <th>Скидка</th>
-      <th>Создан пользователем</th>
-      <th>Дата создания</th>
-      <th>Обновлен пользователем</th>
-      <th>Дата обновления</th>
-      <th>Коммуникация</th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr th:each = "el, iterStat: ${clients}">
-      <td th:text="${iterStat.index + 1}"></td>
-      <td th:text="${el.fullName}"></td>
-      <td th:text="${el.email}"></td>
-      <td th:text="${el.phone}"></td>
-      <td th:text="${el.discount} + '%'"></td>
-      <td th:text="${el.createUser.getLogin()}"></td>
-      <td th:text="${#temporals.format(el.createDate, 'dd-MM-yyyy HH:mm')}"></td>
-      <td th:text="${el.updateUser?.getLogin()}"></td>
-      <td th:text="${#temporals.format(el.updateDate, 'dd-MM-yyyy HH:mm')}"></td>
-      <td th:if="${el.rejectFlag} == false">
-        <form th:action="'/reject_client/' + ${el.id}" method="post">
-          <button class="btn btn-secondary" type="submit">Отключить</button>
-        </form>
-      </td>
-      <td th:if="${el.rejectFlag} == true">
-        <form th:action="'/reject_client/' + ${el.id}" method="post">
-          <button class="btn btn-success" type="submit">Включить</button>
-        </form>
-      </td>
-      <td>
-        <a th:href="'/edit_client/' + ${el.id} " class="btn btn-warning">Редактировать</a>
-      </td>
-      <td>
-        <form th:action="'/remove_client/' + ${el.id}" method="post">
-          <button class="btn btn-danger" type="submit">Удалить</button>
-        </form>
-      </td>
-    </tr>
-  </table>
+
+  <div id="container"
+       style="width: 550px; height: 400px; margin: 0 auto"></div>
 </div>
+<script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script th:inline="javascript">
+  $(function(){
+    Highcharts.chart('container', {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Информация о работе отдела'
+      },
+      subtitle: {
+        text: 'Закрытие сделки сотрудников'
+      },
+      xAxis: {
+        categories: [[${keySet}]],
+        crosshair: true
+      },
+      yAxis: {
+        min: 0,
+        max:1000,
+        title: {
+          text: 'Количество'
+        }
+      },
+      tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0
+        }
+      },
+      series: [{
+        name: 'Сотрудник',
+        data: [[${values}]]
+      }]
+    });
+  });
+</script>
 </body>
 </html>
