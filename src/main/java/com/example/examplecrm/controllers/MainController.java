@@ -10,4 +10,9 @@ public class MainController {
     public String main() {
         return "main";
     }
+
+    @GetMapping("/")
+    public String defaultUrl() {
+        return "redirect:/clients_list";
+    }
 }

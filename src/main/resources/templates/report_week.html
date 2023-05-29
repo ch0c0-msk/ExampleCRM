@@ -55,10 +55,10 @@
               Отчеты
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="#">Воронка продаж</a></li>
-              <li><a class="dropdown-item" href="#">Работа сотрудников</a></li>
-              <li><a class="dropdown-item" href="#">Проданные товары</a></li>
-              <li><a class="dropdown-item" href="#">Недельный отчет</a></li>
+              <li><a class="dropdown-item" href="/report_deals">Воронка продаж</a></li>
+              <li><a class="dropdown-item" href="/report_users">Работа сотрудников</a></li>
+              <li><a class="dropdown-item" href="/report_products">Проданные товары</a></li>
+              <li><a class="dropdown-item" href="/report_week">Недельный отчет</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
@@ -108,13 +108,13 @@
                 {
                   type: "area",
                   dataPoints: [//array
-                    { x: new Date(2023, 3, 17), y: 100},
-                    { x: new Date(2023, 3, 18), y: 200},
-                    { x: new Date(2023, 3, 19), y: 150},
-                    { x: new Date(2023, 3, 20), y: 176},
-                    { x: new Date(2023, 3, 21), y: 197},
-                    { x: new Date(2023, 3, 22), y: 0},
-                    { x: new Date(2023, 3, 23), y: 10},
+                    { x: new Date(2023, 4, 22), y: 100},
+                    { x: new Date(2023, 4, 23), y: 200},
+                    { x: new Date(2023, 4, 24), y: 150},
+                    { x: new Date(2023, 4, 25), y: 176},
+                    { x: new Date(2023, 4, 26), y: 197},
+                    { x: new Date(2023, 4, 27), y: 0},
+                    { x: new Date(2023, 4, 28), y: 10},
                   ]
                 }
               ]

@@ -38,6 +38,7 @@
               <li><a class="dropdown-item" href="/deals_list">Список заявок</a></li>
               <li sec:authorize="hasAuthority('MANAGER')"><a class="dropdown-item" href="/deals_all_list">Список всех заявок</a></li>
               <li><a class="dropdown-item" href="/add_deal">Завести заявку</a></li>
+              <li><a class="dropdown-item" href="/send_email">Отправить e-mail</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -54,9 +55,10 @@
               Отчеты
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="#">*</a></li>
-              <li><a class="dropdown-item" href="#">*</a></li>
-              <li><a class="dropdown-item" href="#">*</a></li>
+              <li><a class="dropdown-item" href="/report_deals">Воронка продаж</a></li>
+              <li><a class="dropdown-item" href="/report_users">Работа сотрудников</a></li>
+              <li><a class="dropdown-item" href="/report_products">Проданные товары</a></li>
+              <li><a class="dropdown-item" href="/report_week">Недельный отчет</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
@@ -69,8 +71,14 @@
               <li><a class="dropdown-item" href="/support_list">Обращения пользователей</a></li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link mx-2" href="/support_send">Написать в поддержку</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link mx-2 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Поддержка
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/support_send">Сообщить о проблеме</a></li>
+              <li><a class="dropdown-item" href="/message_list">Мои обращения</a></li>
+            </ul>
           </li>
           <li class="nav-item">
             <form th:action="@{/logout}" method="post">
